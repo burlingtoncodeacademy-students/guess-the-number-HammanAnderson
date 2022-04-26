@@ -14,7 +14,7 @@ function ask(questionText) {
 //Game start - prompting user in console as to which version to play.
 
 async function gamePlay() {
-  //Four options available. User guessing, computer guessing, exiting or error.
+  //Four options available. User guessing, computer guessing, exiting or Cheat.
   let gameMode = await ask(
     "\nWould you like to play a game?\nIf you want me to guess your number, input forward.\nIf you want to guess my number, input reverse.\nOtherwise you can leave by inputting exit.\n\n"
   );
@@ -46,12 +46,6 @@ async function gamePlay() {
 
 //------------------- User Parameter Setup -------------------//
 
-//Computer calculates guess based on provided min and max from user
-function guess(min, max) {
-  //returns a number half way between minimum and maximum range values
-  return Math.floor((max - min) / 2) + min;
-}
-
 async function Forward() {
   //Computer greeting user
   console.log("\nFantastic, I can't wait to guess your number!\n");
@@ -59,36 +53,34 @@ async function Forward() {
   //Prompt user for maximum input value and assign to max variable
   max = await ask("What is the highest number I can guess?  ");
 
+  //Cheat handling for max not being high enough
+  if (max < 0) {
+    max = await ask(
+      "Please make sure to choose a maximum value equal to or above 1. Input your maximum range."
+    );
+  }
+
   //Turn max response into integer (number type)
   max = parseInt(max);
   //confirm value corresponds
   console.log(max);
-
-  //Error handling for max not being high enough
-  if (max < 0) {
-    console.log(
-      "Please make sure to choose a maximum value over 1. Try again."
-    );
-    Forward();
-  }
 
   //Prompt user for minimum input value and assign to min variable
   min = await ask(
     "\nWhat is the lowest number I can guess? \nThis number must be 1 or higher.  "
   );
 
+  //Cheat handling for min not being high enough
+  if (min < 0 || min > max) {
+    min = await ask(
+      "Please make sure to choose a minimum value equal to or above 1. Input your minimum range."
+    );
+  }
+
   //Turn min response into integer (number type)
   min = parseInt(min);
   //confirm value corresponds
   console.log(min);
-
-  //Error handling for min not being high enough
-  if (min < 0) {
-    console.log(
-      "Please make sure to choose a minimum value over 1. Try again."
-    );
-    Forward();
-  }
 
   //Prompt user for their Secret Number and assign to secretNumb variable
   let secretNumb = await ask(
@@ -100,12 +92,17 @@ async function Forward() {
   //confirm value corresponds
   // console.log(secretNumb);
 
-  //Error handling for secretNumb not being within range
+  //Computer calculates guess based on provided min and max from user
+  function guess(min, max) {
+    //returns a number half way between minimum and maximum range values
+    return Math.floor((max - min) / 2) + min;
+  }
+
+  //Cheat handling for secretNumb not being within range
   while (secretNumb < min || secretNumb > max) {
-    console.log(
-      "Your secret number must be in the range you specified. Try again."
+    secretNumb = await ask(
+      "Your secret number must be in the range you specified. Please input your secret number."
     );
-    Forward();
   }
 
   //Confirm secret number and show user through template literal
@@ -123,12 +120,13 @@ async function Forward() {
   //to upper case to ensure user input of N/Y or n/y will work
   answer = answer.toUpperCase();
   //check user input
-  console.log(answer);
+  // console.log(answer);
 
   //Set guess count to initate number of turns taken
   let guessCount = 0;
+  //console.log(guessCount)
 
-  //Computer guesses correctly on the first try. Game starts over.
+  //Computer guesses correctly on the first try. Game starts over to game choice.
   if (answer === "Y") {
     console.log(
       `Your number is really ${compNumb}? I can't believe I guessed it on the first try!`
@@ -141,8 +139,8 @@ async function Forward() {
       guessCount = guessCount++;
 
       if (answer === "Y") {
+        //Once computer guesses correctly, it lets user know how many turns it took to get there
         console.log(
-          //Once computer guesses correctly, it lets user know how many turns it took to get there
           `Well here we are. I guessed your number ${secretNumb} in ${guessCount} tries.`
         );
         //Game starts over
@@ -157,7 +155,7 @@ async function Forward() {
       //check user input
       // console.log(hLAnswer);
 
-      //Error Handling for human inputting incorrect answer
+      //Cheat Handling for human inputting incorrect answer
       //When player says their number is Lower than the computer guess and that is false
       if (compNumb - 1 < min && hLAnswer === "L") {
         console.log(
@@ -190,14 +188,20 @@ async function Forward() {
       }
       //Computer repeats guessing until they find the right answer
       answer = await ask(`is your number ${compNumb}? Y or N `);
+      //to upper case to ensure user input of Y/Y or y/n will work
+      answer = answer.toUpperCase();
     }
+    console.log("I guessed your number correctly!")
+    gamePlay();
   }
 }
+
+//Brings player back to Screen to choose game
 gamePlay();
 
 /*-------------------- Reverse Game Play -----------------*/
 
-//Game functions but little to no error handling. Also could not get recursive function to work so it just exits the game.
+//Game functions but little to no Cheat handling. Also could not get recursive function to work so it just exits the game.
 
 async function Reverse() {
   //Computer greeting user
@@ -232,7 +236,7 @@ async function Reverse() {
   //Make sure guess is an integer
   playerGuess = parseInt(playerGuess);
 
-  //Error handling for input not equal to number value
+  //Cheat handling for input not equal to number value
   if (playerGuess == NaN) {
     ("Please be sure your guess is a number value.");
   } else if (playerGuess === compNumb) {
