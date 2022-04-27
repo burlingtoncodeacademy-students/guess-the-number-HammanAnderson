@@ -128,13 +128,10 @@ async function Forward() {
     gamePlay();
   } else {
     //Computer guessed wrong - begins Yes/No and High/Low questions
+
+    //Tried to figure out where GuessCount should go, but ran out of time.
+
     while (answer !== "Y") {
-      if (answer === "Y") {
-        //Once computer guesses correctly, it lets user know how many turns it took to get there
-        console.log(`Well here we are. I guessed your number!`);
-        //Game starts over
-        gamePlay();
-      }
       /*Computer did not guess correctly, now need to ask if secret number is higher or lower */
       let hLAnswer = await ask(
         ` Is your number higher (H) or lower (L) than ${compNumb}?\n`
@@ -180,7 +177,7 @@ async function Forward() {
       //to upper case to ensure user input of Y/Y or y/n will work
       answer = answer.toUpperCase();
     }
-    console.log(`Well here we are. I guessed your number ${secretNumb}!`);
+    console.log(`YAY. I guessed your number ${secretNumb}! `);
     gamePlay();
   }
 }
