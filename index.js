@@ -119,12 +119,6 @@ async function Forward() {
   let answer = await ask(`is your number ${compNumb}? (Y) or (N) `);
   //to upper case to ensure user input of N/Y or n/y will work
   answer = answer.toUpperCase();
-  //check user input
-  // console.log(answer);
-
-  //Set guess count to initate number of turns taken
-  let guessCount = 0;
-  //console.log(guessCount)
 
   //Computer guesses correctly on the first try. Game starts over to game choice.
   if (answer === "Y") {
@@ -135,14 +129,9 @@ async function Forward() {
   } else {
     //Computer guessed wrong - begins Yes/No and High/Low questions
     while (answer !== "Y") {
-      //Beging recording number of guesses through incrimentation
-      guessCount = guessCount++;
-
       if (answer === "Y") {
         //Once computer guesses correctly, it lets user know how many turns it took to get there
-        console.log(
-          `Well here we are. I guessed your number ${secretNumb} in ${guessCount} tries.`
-        );
+        console.log(`Well here we are. I guessed your number!`);
         //Game starts over
         gamePlay();
       }
@@ -191,7 +180,7 @@ async function Forward() {
       //to upper case to ensure user input of Y/Y or y/n will work
       answer = answer.toUpperCase();
     }
-    console.log("I guessed your number correctly!")
+    console.log(`Well here we are. I guessed your number ${secretNumb}!`);
     gamePlay();
   }
 }
